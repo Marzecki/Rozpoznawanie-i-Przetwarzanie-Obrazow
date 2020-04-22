@@ -4,6 +4,7 @@ import keras.layers.core
 import keras.backend
 from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
+import pickle
 
 
 #labels = ['20', '30', '50', '60', '70', '80', 'not80', '100', '120', 'noPassing']
@@ -37,6 +38,7 @@ train_generator = train_dataGen.flow_from_directory(
     subset='training'
 )
 
+print("training: \n")
 print(train_generator.image_shape)
 
 validation_generator = train_dataGen.flow_from_directory(
@@ -48,6 +50,7 @@ validation_generator = train_dataGen.flow_from_directory(
     subset='validation'
 )
 
+print("validation: \n")
 print(validation_generator.image_shape)
 
 print('\n\n\n\n')
@@ -69,7 +72,7 @@ model.add(keras.layers.Dense(units=120, activation='relu'))                     
 
 model.add(keras.layers.Dense(units=84, activation='relu'))                                                  # szosta warstwa
 
-model.add(keras.layers.Dense(units=10, activation = 'softmax'))                                             # siodma warstwa
+model.add(keras.layers.Dense(units=43, activation = 'softmax'))                                             # siodma warstwa
 
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy',metrics=['accuracy'])
 
@@ -82,7 +85,7 @@ history = model.fit_generator(
     steps_per_epoch = train_generator.samples // 64,
     validation_data = validation_generator, 
     validation_steps = validation_generator.samples // 64,
-    epochs = 3)
+    epochs = 100)
 
 
 ############################### PLOT
@@ -102,3 +105,8 @@ plt.show()
 score =model.evaluate(train_generator,verbose=0)
 print('Test Score:',score[0])
 print('Test Accuracy:',score[1])
+
+#zapisanie modelu
+pickle_out= open("model_trained.p","wb")  # wb = WRITE BYTE
+pickle.dump(model,pickle_out)
+pickle_out.close()
