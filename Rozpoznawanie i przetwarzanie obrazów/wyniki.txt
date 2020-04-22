@@ -1,0 +1,2 @@
+foldery     epoki       test score      test accuracy
+43          100         0.26            0.91
